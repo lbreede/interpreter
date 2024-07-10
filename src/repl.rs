@@ -25,9 +25,9 @@ pub fn start() {
         let mut tok = lex.next_token();
 
         while tok != Token::Eof {
-            println!("{:?}", tok);
+            println!("{tok:?}");
             tok = lex.next_token();
         }
-        println!("{:?}", tok);
+        println!("{tok:?}");
     }
 }
