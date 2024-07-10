@@ -1,5 +1,4 @@
 use crate::token::Token;
-use std::io;
 
 #[derive(Debug)]
 pub struct Lexer {
