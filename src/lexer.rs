@@ -123,114 +123,108 @@ mod tests {
     use crate::token::Token::*;
 
     #[test]
-    fn test_next_token() {
-        let input = String::from(
-            // "=+(){},;",
-            "let five = 5;
+    fn get_next_complete() {
+        let input = r#"let five = 5;
             let ten = 10;
             let add = fn(x, y) {
                 x + y;
             };
             let result = add(five, ten);
-            !-/*5;
-            5 < 10 > 5;
+        !-/*5;
+        5 < 10 > 5;
+        if (5 < 10) {
+            return true;
+        } else {
+            return false;
+        }
 
-            if (5 < 10) {
-               return true;
-            } else {
-               return false;
-            }
-            10 == 10; 10 != 9;",
-        );
+        10 == 10;
+        10 != 9;
+        "#;
 
-        let five = Ident("five".into());
-        let i_five = Int("5".into());
-        let ten = Ident("ten".into());
-        let i_ten = Int("10".into());
-        let add = Ident("add".into());
-        let x = Ident("x".into());
-        let y = Ident("y".into());
-        let result = Ident("result".into());
+        let mut lex = Lexer::new(input.into());
 
         let tokens = vec![
-            Let,
-            five.clone(),
-            Assign,
-            i_five.clone(),
-            Semicolon,
-            Let,
-            ten.clone(),
-            Assign,
-            i_ten.clone(),
-            Semicolon,
-            Let,
-            add.clone(),
-            Assign,
-            Function,
-            LParen,
-            x.clone(),
-            Comma,
-            y.clone(),
-            RParen,
-            LBrace,
-            x.clone(),
-            Plus,
-            y.clone(),
-            Semicolon,
-            RBrace,
-            Semicolon,
-            Let,
-            result.clone(),
-            Assign,
-            add.clone(),
-            LParen,
-            five.clone(),
-            Comma,
-            ten.clone(),
-            RParen,
-            Semicolon,
-            Bang,
-            Minus,
-            Slash,
-            Asterisk,
-            i_five.clone(),
-            Semicolon,
-            i_five.clone(),
-            LT,
-            i_ten.clone(),
-            GT,
-            i_five.clone(),
-            Semicolon,
-            If,
-            LParen,
-            i_five.clone(),
-            LT,
-            i_ten.clone(),
-            RParen,
-            LBrace,
-            Return,
-            True,
-            Semicolon,
-            RBrace,
-            Else,
-            LBrace,
-            Return,
-            False,
-            Semicolon,
-            RBrace,
-            i_ten.clone(),
-            EQ,
-            i_ten.clone(),
-            Semicolon,
-            i_ten.clone(),
-            NotEQ,
-            Int("9".into()),
-            Semicolon,
+            Token::Let,
+            Token::Ident(String::from("five")),
+            Token::Assign,
+            Token::Int(String::from("5")),
+            Token::Semicolon,
+            Token::Let,
+            Token::Ident(String::from("ten")),
+            Token::Assign,
+            Token::Int(String::from("10")),
+            Token::Semicolon,
+            Token::Let,
+            Token::Ident(String::from("add")),
+            Token::Assign,
+            Token::Function,
+            Token::LParen,
+            Token::Ident(String::from("x")),
+            Token::Comma,
+            Token::Ident(String::from("y")),
+            Token::RParen,
+            Token::LBrace,
+            Token::Ident(String::from("x")),
+            Token::Plus,
+            Token::Ident(String::from("y")),
+            Token::Semicolon,
+            Token::RBrace,
+            Token::Semicolon,
+            Token::Let,
+            Token::Ident(String::from("result")),
+            Token::Assign,
+            Token::Ident(String::from("add")),
+            Token::LParen,
+            Token::Ident(String::from("five")),
+            Token::Comma,
+            Token::Ident(String::from("ten")),
+            Token::RParen,
+            Token::Semicolon,
+            Token::Bang,
+            Token::Minus,
+            Token::Slash,
+            Token::Asterisk,
+            Token::Int(String::from("5")),
+            Token::Semicolon,
+            Token::Int(String::from("5")),
+            Token::LT,
+            Token::Int(String::from("10")),
+            Token::GT,
+            Token::Int(String::from("5")),
+            Token::Semicolon,
+            Token::If,
+            Token::LParen,
+            Token::Int(String::from("5")),
+            Token::LT,
+            Token::Int(String::from("10")),
+            Token::RParen,
+            Token::LBrace,
+            Token::Return,
+            Token::True,
+            Token::Semicolon,
+            Token::RBrace,
+            Token::Else,
+            Token::LBrace,
+            Token::Return,
+            Token::False,
+            Token::Semicolon,
+            Token::RBrace,
+            Token::Int(String::from("10")),
+            Token::EQ,
+            Token::Int(String::from("10")),
+            Token::Semicolon,
+            Token::Int(String::from("10")),
+            Token::NotEQ,
+            Token::Int(String::from("9")),
+            Token::Semicolon,
+            Token::Eof,
         ];
 
-        let mut l = Lexer::new(input);
-        for tok in tokens {
-            assert_eq!(tok, l.next_token())
+        for expected_token in tokens {
+            let token = lex.next_token();
+            println!("expected: {:?}, received {:?}", expected_token, token);
+            assert_eq!(expected_token, token);
         }
     }
 }
