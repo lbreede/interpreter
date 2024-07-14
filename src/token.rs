@@ -19,6 +19,7 @@ pub enum Token {
 
     LT,
     GT,
+
     EQ,
     NotEQ,
 
