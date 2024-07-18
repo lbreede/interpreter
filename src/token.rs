@@ -17,11 +17,11 @@ pub enum Token {
     Asterisk,
     Slash,
 
-    LT,
-    GT,
+    LessThan,
+    GreaterThan,
 
-    EQ,
-    NotEQ,
+    Equal,
+    NotEqual,
 
     // Delimiters
     Comma,
@@ -29,8 +29,8 @@ pub enum Token {
 
     LParen,
     RParen,
-    LBrace,
-    RBrace,
+    LSquirly,
+    RSquirly,
 
     // Keywords
     Function,
@@ -58,6 +58,26 @@ impl FromStr for Token {
             "else" => Token::Else,
             "return" => Token::Return,
             _ => Token::Ident(s.to_string()),
+        };
+        Ok(tok)
+    }
+}
+impl Token {
+    fn from_char(c: char) -> Result<Self, ParseTokenError> {
+        let tok = match c {
+            ';' => Token::Semicolon,
+            '(' => Token::LParen,
+            ')' => Token::RParen,
+            ',' => Token::Comma,
+            '{' => Token::LSquirly,
+            '}' => Token::RSquirly,
+            '+' => Token::Plus,
+            '-' => Token::Minus,
+            '*' => Token::Asterisk,
+            '<' => Token::LessThan,
+            '>' => Token::GreaterThan,
+            '/' => Token::Slash,
+            _ => return Err(ParseTokenError),
         };
         Ok(tok)
     }
