@@ -1,4 +1,4 @@
-// use std::fmt::{write, Display};
+use std::str::FromStr;
 
 #[derive(PartialEq, Debug, Clone)]
 pub enum Token {
@@ -40,4 +40,25 @@ pub enum Token {
     If,
     Else,
     Return,
+}
+
+#[derive(Debug)]
+pub struct ParseTokenError;
+
+impl FromStr for Token {
+    type Err = ParseTokenError;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        let tok = match s {
+            "let" => Token::Let,
+            "fn" => Token::Function,
+            "true" => Token::True,
+            "false" => Token::False,
+            "if" => Token::If,
+            "else" => Token::Else,
+            "return" => Token::Return,
+            _ => Token::Ident(s.to_string()),
+        };
+        Ok(tok)
+    }
 }
