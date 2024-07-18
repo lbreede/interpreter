@@ -3,47 +3,53 @@ use std::iter::Peekable;
 use std::str::Chars;
 use std::str::FromStr;
 
-struct Lexer<'a> {
+pub struct Lexer<'a> {
     input: Peekable<Chars<'a>>,
 }
 
 impl<'a> Lexer<'a> {
-    fn new(input: &'a str) -> Self {
+    pub fn new(input: &'a str) -> Self {
         Lexer {
             input: input.chars().peekable(),
         }
     }
-    fn next_token(&mut self) -> Token {
+    pub fn next_token(&mut self) -> Token {
         if let Some(c) = self.input.next() {
             match c {
                 ';' => return Token::Semicolon,
                 '(' => return Token::LParen,
                 ')' => return Token::RParen,
                 ',' => return Token::Comma,
-                '{' => return Token::LBrace,
-                '}' => return Token::RBrace,
+                '{' => return Token::LSquirly,
+                '}' => return Token::RSquirly,
                 '+' => return Token::Plus,
                 '-' => return Token::Minus,
                 '*' => return Token::Asterisk,
-                '<' => return Token::LT,
-                '>' => return Token::GT,
+                '<' => return Token::LessThan,
+                '>' => return Token::GreaterThan,
                 '/' => return Token::Slash,
                 '=' => {
                     if self.input.peek() == Some(&'=') {
                         self.input.next();
-                        return Token::EQ;
+                        return Token::Equal;
                     }
                     return Token::Assign;
                 }
                 '!' => {
                     if self.input.peek() == Some(&'=') {
                         self.input.next();
-                        return Token::NotEQ;
+                        return Token::NotEqual;
                     }
                     return Token::Bang;
                 }
-                'a'..='z' | 'A'..='Z' | '_' => return self.ident(c),
-                '0'..='9' => return self.number(c),
+                'a'..='z' | 'A'..='Z' | '_' => {
+                    let identifier = self.read_identifier(c);
+                    return Token::from_str(&identifier).unwrap();
+                }
+                '0'..='9' => {
+                    let number = self.read_number(c);
+                    return Token::Int(number);
+                }
                 ' ' | '\n' | '\t' | '\r' => self.next_token(),
                 _ => return Token::Illegal(c.to_string()),
             }
@@ -51,25 +57,25 @@ impl<'a> Lexer<'a> {
             return Token::Eof;
         }
     }
-    fn number(&mut self, c: char) -> Token {
+    fn read_number(&mut self, c: char) -> String {
         let mut number = c.to_string();
-        while let Some(n) = self.input.peek() {
-            match n {
+        while let Some(c) = self.input.peek() {
+            match c {
                 '0'..='9' => number.push(self.input.next().unwrap()),
                 _ => break,
             }
         }
-        return Token::Int(number);
+        number
     }
-    fn ident(&mut self, c: char) -> Token {
+    fn read_identifier(&mut self, c: char) -> String {
         let mut ident = c.to_string();
-        while let Some(p) = self.input.peek() {
-            match p {
+        while let Some(c) = self.input.peek() {
+            match c {
                 'a'..='z' | 'A'..='Z' | '_' => ident.push(self.input.next().unwrap()),
                 _ => break,
             }
         }
-        return Token::from_str(&ident).unwrap();
+        ident
     }
 }
 
@@ -119,12 +125,12 @@ mod tests {
             Token::Comma,
             Token::Ident(String::from("y")),
             Token::RParen,
-            Token::LBrace,
+            Token::LSquirly,
             Token::Ident(String::from("x")),
             Token::Plus,
             Token::Ident(String::from("y")),
             Token::Semicolon,
-            Token::RBrace,
+            Token::RSquirly,
             Token::Semicolon,
             Token::Let,
             Token::Ident(String::from("result")),
@@ -143,34 +149,34 @@ mod tests {
             Token::Int(String::from("5")),
             Token::Semicolon,
             Token::Int(String::from("5")),
-            Token::LT,
+            Token::LessThan,
             Token::Int(String::from("10")),
-            Token::GT,
+            Token::GreaterThan,
             Token::Int(String::from("5")),
             Token::Semicolon,
             Token::If,
             Token::LParen,
             Token::Int(String::from("5")),
-            Token::LT,
+            Token::LessThan,
             Token::Int(String::from("10")),
             Token::RParen,
-            Token::LBrace,
+            Token::LSquirly,
             Token::Return,
             Token::True,
             Token::Semicolon,
-            Token::RBrace,
+            Token::RSquirly,
             Token::Else,
-            Token::LBrace,
+            Token::LSquirly,
             Token::Return,
             Token::False,
             Token::Semicolon,
-            Token::RBrace,
+            Token::RSquirly,
             Token::Int(String::from("10")),
-            Token::EQ,
+            Token::Equal,
             Token::Int(String::from("10")),
             Token::Semicolon,
             Token::Int(String::from("10")),
-            Token::NotEQ,
+            Token::NotEqual,
             Token::Int(String::from("9")),
             Token::Semicolon,
             Token::Eof,
