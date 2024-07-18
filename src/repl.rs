@@ -21,7 +21,7 @@ pub fn start() {
             break;
         }
 
-        let mut lex = Lexer::new(input.to_string());
+        let mut lex = Lexer::new(input);
         let mut tok = lex.next_token();
 
         while tok != Token::Eof {
