@@ -62,6 +62,8 @@ impl FromStr for Token {
         Ok(tok)
     }
 }
+
+#[allow(dead_code)]
 impl Token {
     fn from_char(c: char) -> Result<Self, ParseTokenError> {
         let tok = match c {
