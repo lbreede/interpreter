@@ -120,7 +120,6 @@ impl Lexer {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::token::Token::*;
 
     #[test]
     fn get_next_complete() {

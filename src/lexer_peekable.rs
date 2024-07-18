@@ -1,18 +1,8 @@
 use crate::token::Token;
 use std::iter::Peekable;
 use std::str::Chars;
+use std::str::FromStr;
 
-// #[derive(Debug, PartialEq)]
-// enum Token {
-//     Let,
-//     Ident(String),
-//     Assign,
-//     Int(String),
-//     Semicolon,
-//     Illegal(String),
-//     Eof,
-// }
-//
 struct Lexer<'a> {
     input: Peekable<Chars<'a>>,
 }
@@ -79,16 +69,7 @@ impl<'a> Lexer<'a> {
                 _ => break,
             }
         }
-        return match ident.as_str() {
-            "let" => Token::Let,
-            "fn" => Token::Function,
-            "true" => Token::True,
-            "false" => Token::False,
-            "if" => Token::If,
-            "else" => Token::Else,
-            "return" => Token::Return,
-            _ => Token::Ident(ident),
-        };
+        return Token::from_str(&ident).unwrap();
     }
 }
 
