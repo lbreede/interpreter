@@ -1,13 +1,13 @@
-use interpreter::lexer::Lexer;
+use interpreter::lexer::Lexer as LexerPeekableBytes;
 use interpreter::lexer_book_style::Lexer as LexerBookStyle;
-use interpreter::lexer_peekable_bytes::Lexer as LexerPeekableBytes;
+use interpreter::lexer_peekable_chars::Lexer as LexerPeekableChars;
 use interpreter::token::Token;
 
 pub trait Lexable {
     fn next_token(&mut self) -> Token;
 }
 
-impl<'a> Lexable for Lexer<'a> {
+impl<'a> Lexable for LexerPeekableChars<'a> {
     fn next_token(&mut self) -> Token {
         self.next_token()
     }
@@ -19,7 +19,6 @@ impl<'a> Lexable for LexerPeekableBytes<'a> {
 }
 impl Lexable for LexerBookStyle {
     fn next_token(&mut self) -> Token {
-        // Delegate to the existing implementation
         self.next_token()
     }
 }
@@ -128,7 +127,7 @@ fn get_next_complete() {
         Token::Eof,
     ];
 
-    test_lexer(&mut Lexer::new(input), &tokens);
+    test_lexer(&mut LexerPeekableChars::new(input), &tokens);
     test_lexer(&mut LexerBookStyle::new(input.to_string()), &tokens);
     test_lexer(&mut LexerPeekableBytes::new(input), &tokens);
 }

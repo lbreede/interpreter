@@ -1,4 +1,4 @@
-use crate::lexer::Lexer;
+use crate::lexer_peekable_chars::Lexer;
 use crate::token::Token;
 use std::io;
 use std::io::Write;

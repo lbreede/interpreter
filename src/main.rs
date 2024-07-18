@@ -1,4 +1,4 @@
-mod lexer;
+mod lexer_peekable_chars;
 mod repl;
 mod token;
 
