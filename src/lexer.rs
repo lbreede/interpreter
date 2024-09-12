@@ -1,7 +1,8 @@
-use crate::token::Token;
 use std::iter::Peekable;
 use std::str::Bytes;
 use std::str::FromStr;
+
+use crate::token::Token;
 
 pub struct Lexer<'a> {
     input: Peekable<Bytes<'a>>,
