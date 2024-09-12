@@ -16,45 +16,45 @@ impl<'a> Lexer<'a> {
     pub fn next_token(&mut self) -> Token {
         if let Some(c) = self.input.next() {
             match c {
-                ';' => return Token::Semicolon,
-                '(' => return Token::LParen,
-                ')' => return Token::RParen,
-                ',' => return Token::Comma,
-                '{' => return Token::LSquirly,
-                '}' => return Token::RSquirly,
-                '+' => return Token::Plus,
-                '-' => return Token::Minus,
-                '*' => return Token::Asterisk,
-                '<' => return Token::LessThan,
-                '>' => return Token::GreaterThan,
-                '/' => return Token::Slash,
+                ';' => Token::Semicolon,
+                '(' => Token::LParen,
+                ')' => Token::RParen,
+                ',' => Token::Comma,
+                '{' => Token::LSquirly,
+                '}' => Token::RSquirly,
+                '+' => Token::Plus,
+                '-' => Token::Minus,
+                '*' => Token::Asterisk,
+                '<' => Token::LessThan,
+                '>' => Token::GreaterThan,
+                '/' => Token::Slash,
                 '=' => {
                     if self.input.peek() == Some(&'=') {
                         self.input.next();
                         return Token::Equal;
                     }
-                    return Token::Assign;
+                    Token::Assign
                 }
                 '!' => {
                     if self.input.peek() == Some(&'=') {
                         self.input.next();
                         return Token::NotEqual;
                     }
-                    return Token::Bang;
+                    Token::Bang
                 }
                 'a'..='z' | 'A'..='Z' | '_' => {
                     let identifier = self.read_identifier(c);
-                    return Token::from_str(&identifier).unwrap();
+                    Token::from_str(&identifier).unwrap()
                 }
                 '0'..='9' => {
                     let number = self.read_number(c);
-                    return Token::Int(number);
+                    Token::Int(number)
                 }
                 ' ' | '\n' | '\t' | '\r' => self.next_token(),
-                _ => return Token::Illegal(c.to_string()),
+                _ => Token::Illegal(c.to_string()),
             }
         } else {
-            return Token::Eof;
+            Token::Eof
         }
     }
     fn read_number(&mut self, c: char) -> String {

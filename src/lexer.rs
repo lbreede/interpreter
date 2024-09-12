@@ -20,46 +20,46 @@ impl<'a> Lexer<'a> {
     pub fn next_token(&mut self) -> Token {
         if let Some(b) = self.input.next() {
             match b {
-                b';' => return Token::Semicolon,
-                b'(' => return Token::LParen,
-                b')' => return Token::RParen,
-                b',' => return Token::Comma,
-                b'{' => return Token::LSquirly,
-                b'}' => return Token::RSquirly,
-                b'+' => return Token::Plus,
-                b'-' => return Token::Minus,
-                b'*' => return Token::Asterisk,
-                b'<' => return Token::LessThan,
-                b'>' => return Token::GreaterThan,
-                b'/' => return Token::Slash,
+                b';' => Token::Semicolon,
+                b'(' => Token::LParen,
+                b')' => Token::RParen,
+                b',' => Token::Comma,
+                b'{' => Token::LSquirly,
+                b'}' => Token::RSquirly,
+                b'+' => Token::Plus,
+                b'-' => Token::Minus,
+                b'*' => Token::Asterisk,
+                b'<' => Token::LessThan,
+                b'>' => Token::GreaterThan,
+                b'/' => Token::Slash,
                 b'=' => {
                     if self.input.peek() == Some(&b'=') {
                         self.input.next();
                         return Token::Equal;
                     }
-                    return Token::Assign;
+                    Token::Assign
                 }
                 b'!' => {
                     if self.input.peek() == Some(&b'=') {
                         self.input.next();
                         return Token::NotEqual;
                     }
-                    return Token::Bang;
+                    Token::Bang
                 }
                 b'a'..=b'z' | b'A'..=b'Z' | b'_' => {
                     let identifier = self.read_token(b, |x| x.is_ascii_alphabetic() || x == b'_');
-                    return Token::from_str(&identifier).unwrap();
+                    Token::from_str(&identifier).unwrap()
                 }
                 b'0'..=b'9' => {
                     // let number = self.read_number(b);
                     let number = self.read_token(b, |x| x.is_ascii_digit());
-                    return Token::Int(number);
+                    Token::Int(number)
                 }
                 b' ' | b'\n' | b'\t' | b'\r' => self.next_token(),
-                _ => return Token::Illegal(b.to_string()),
+                _ => Token::Illegal(b.to_string()),
             }
         } else {
-            return Token::Eof;
+            Token::Eof
         }
     }
 
