@@ -9,6 +9,9 @@ pub struct Lexer {
 }
 
 impl Lexer {
+    /// Creates a new `Lexer` from a `&str`.
+    ///
+    /// The `&str` is transformed into a `Box<[u8]>` internally.
     pub fn new(input: &str) -> Lexer {
         let mut lexer = Lexer {
             input: Box::from(input.as_bytes()),
@@ -20,16 +23,10 @@ impl Lexer {
         lexer
     }
 
-    fn read_char(&mut self) {
-        self.ch = if self.read_position >= self.input.len() {
-            0
-        } else {
-            self.input[self.read_position]
-        };
-        self.position = self.read_position;
-        self.read_position += 1;
-    }
-
+    /// Returns the next token or `None` if reached the end.
+    ///
+    /// NOTE: Consider switching from `Option<Token>` back to `Token`
+    /// and returning `Token::Eof` instead of `None`.
     pub fn next_token(&mut self) -> Option<Token> {
         self.skip_whitespace();
 
@@ -74,6 +71,17 @@ impl Lexer {
         Some(token)
     }
 
+    /// Stores the next byte in `self.ch` and advances both the `position` and `read_position`.
+    fn read_char(&mut self) {
+        self.ch = if self.read_position >= self.input.len() {
+            0
+        } else {
+            self.input[self.read_position]
+        };
+        self.position = self.read_position;
+        self.read_position += 1;
+    }
+
     fn read_identifier(&mut self) -> String {
         let position = self.position;
         while self.ch.is_ascii_alphabetic() || self.ch == b'_' {
@@ -96,6 +104,7 @@ impl Lexer {
         }
     }
 
+    /// Returns the next byte, without advancing `position` and `read_position`.
     fn peek_char(&self) -> u8 {
         if self.read_position >= self.input.len() {
             0
