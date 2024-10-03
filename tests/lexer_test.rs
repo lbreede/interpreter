@@ -1,5 +1,6 @@
 use interpreter::lexer::Lexer;
 use interpreter::lexer_book_style::Lexer as LexerBookStyle;
+use interpreter::lexer_boxed_slice::Lexer as LexerBoxedSlice;
 use interpreter::lexer_peekable_chars::Lexer as LexerPeekableChars;
 use interpreter::token::Token;
 
