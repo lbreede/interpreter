@@ -1,7 +1,10 @@
-use crate::lexer_peekable_chars::Lexer;
-use crate::token::Token;
 use std::io;
 use std::io::Write;
+
+// use crate::ast::Parser;
+use crate::lexer::Lexer;
+use crate::lexer_boxed_slice::Lexer as LexerBoxedSlice;
+use crate::token::Token;
 
 pub fn start() {
     loop {
@@ -21,13 +24,17 @@ pub fn start() {
             break;
         }
 
-        let mut lex = Lexer::new(input);
-        let mut tok = lex.next_token();
-
-        while tok != Token::Eof {
-            println!("{tok:?}");
-            tok = lex.next_token();
+        let mut lexer = LexerBoxedSlice::new(input);
+        while let Some(token) = lexer.next_token() {
+            println!("{:?}", token);
         }
-        println!("{tok:?}");
+        println!("Eof");
+
+        // let mut tok = lexer.next_token();
+        // while tok != Token::Eof {
+        // println!("{tok:?}");
+        // tok = lexer.next_token();
+        // }
+        // println!("{tok:?}");
     }
 }
