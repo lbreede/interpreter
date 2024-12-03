@@ -1,5 +1,3 @@
-use std::str::FromStr;
-
 #[derive(PartialEq, Debug, Clone)]
 pub enum Token {
     Illegal(String),
@@ -42,21 +40,6 @@ pub enum Token {
     Return,
 }
 
-impl From<String> for Token {
-    fn from(value: String) -> Self {
-        match value.as_str() {
-            "let" => Token::Let,
-            "fn" => Token::Function,
-            "true" => Token::True,
-            "false" => Token::False,
-            "if" => Token::If,
-            "else" => Token::Else,
-            "return" => Token::Return,
-            _ => Token::Ident(value),
-        }
-    }
-}
-
 impl From<u8> for Token {
     fn from(value: u8) -> Self {
         match value {
@@ -77,26 +60,5 @@ impl From<u8> for Token {
             0 => Token::Eof,
             _ => Token::Illegal(String::from_utf8_lossy(&[value]).to_string()),
         }
-    }
-}
-
-#[derive(Debug)]
-pub struct ParseTokenError;
-
-impl FromStr for Token {
-    type Err = ParseTokenError;
-
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        let tok = match s {
-            "let" => Token::Let,
-            "fn" => Token::Function,
-            "true" => Token::True,
-            "false" => Token::False,
-            "if" => Token::If,
-            "else" => Token::Else,
-            "return" => Token::Return,
-            _ => Token::Ident(s.to_string()),
-        };
-        Ok(tok)
     }
 }

@@ -1,5 +1,4 @@
 use crate::token::Token;
-use std::str::FromStr;
 
 #[derive(Debug)]
 pub struct Lexer {
@@ -34,7 +33,7 @@ impl Lexer {
         let token = match self.ch {
             b'a'..=b'z' | b'A'..=b'Z' | b'_' => {
                 let identifier = self.read_identifier();
-                return Some(Token::from(identifier));
+                return Some(self.lookup_identifier(identifier));
             }
             b'0'..=b'9' => return Some(Token::Int(self.read_number())),
             b'=' => {
@@ -99,6 +98,19 @@ impl Lexer {
             0
         } else {
             self.input[self.read_position]
+        }
+    }
+
+    fn lookup_identifier(&self, identifier: String) -> Token {
+        match identifier.as_str() {
+            "fn" => Token::Function,
+            "let" => Token::Let,
+            "if" => Token::If,
+            "else" => Token::Else,
+            "true" => Token::True,
+            "false" => Token::False,
+            "return" => Token::Return,
+            _ => Token::Ident(identifier),
         }
     }
 }
