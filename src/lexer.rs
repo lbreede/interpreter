@@ -1,4 +1,5 @@
 use crate::token::Token;
+use std::str::FromStr;
 
 #[derive(Debug)]
 pub struct Lexer {
@@ -25,15 +26,15 @@ impl Lexer {
 
     /// Returns the next token or `None` if reached the end.
     ///
-    /// NOTE: Consider switching from `Option<Token>` back to `Token`
-    /// and returning `Token::Eof` instead of `None`.
+    /// NOTE: Consider switching from `Option<Token>` back to `Token` and returning `Token::Eof`
+    /// instead of `None`.
     pub fn next_token(&mut self) -> Option<Token> {
         self.skip_whitespace();
 
         let token = match self.ch {
             b'a'..=b'z' | b'A'..=b'Z' | b'_' => {
                 let identifier = self.read_identifier();
-                return Some(self.lookup_identifier(&identifier));
+                return Some(Token::from(identifier));
             }
             b'0'..=b'9' => return Some(Token::Int(self.read_number())),
             b'=' => {
@@ -52,20 +53,8 @@ impl Lexer {
                     Token::Bang
                 }
             }
-            b';' => Token::Semicolon,
-            b'(' => Token::LParen,
-            b')' => Token::RParen,
-            b',' => Token::Comma,
-            b'+' => Token::Plus,
-            b'{' => Token::LSquirly,
-            b'}' => Token::RSquirly,
-            b'-' => Token::Minus,
-            b'/' => Token::Slash,
-            b'*' => Token::Asterisk,
-            b'<' => Token::LessThan,
-            b'>' => Token::GreaterThan,
             0 => return None,
-            _ => Token::Illegal(String::from_utf8_lossy(&[self.ch]).to_string()),
+            _ => Token::from(self.ch),
         };
         self.read_char();
         Some(token)
@@ -112,19 +101,6 @@ impl Lexer {
             self.input[self.read_position]
         }
     }
-
-    fn lookup_identifier(&self, identifier: &str) -> Token {
-        match identifier {
-            "fn" => Token::Function,
-            "let" => Token::Let,
-            "if" => Token::If,
-            "else" => Token::Else,
-            "true" => Token::True,
-            "false" => Token::False,
-            "return" => Token::Return,
-            _ => Token::Ident(identifier.to_string()),
-        }
-    }
 }
 
 #[cfg(test)]
@@ -153,12 +129,12 @@ mod tests {
             Token::Comma,
             Token::Ident(String::from("y")),
             Token::RParen,
-            Token::LSquirly,
+            Token::LBrace,
             Token::Ident(String::from("x")),
             Token::Plus,
             Token::Ident(String::from("y")),
             Token::Semicolon,
-            Token::RSquirly,
+            Token::RBrace,
             Token::Semicolon,
             Token::Let,
             Token::Ident(String::from("result")),
@@ -188,17 +164,17 @@ mod tests {
             Token::LessThan,
             Token::Int(String::from("10")),
             Token::RParen,
-            Token::LSquirly,
+            Token::LBrace,
             Token::Return,
             Token::True,
             Token::Semicolon,
-            Token::RSquirly,
+            Token::RBrace,
             Token::Else,
-            Token::LSquirly,
+            Token::LBrace,
             Token::Return,
             Token::False,
             Token::Semicolon,
-            Token::RSquirly,
+            Token::RBrace,
             Token::Int(String::from("10")),
             Token::Equal,
             Token::Int(String::from("10")),
