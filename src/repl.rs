@@ -1,4 +1,4 @@
-use interpreter::ast::Parser;
+use crate::lexer::Lexer;
 use std::io;
 use std::io::Write;
 
@@ -20,13 +20,13 @@ pub fn start() {
             break;
         }
 
-        // let mut lexer = Lexer::new(input);
-        // while let Some(token) = lexer.next_token() {
-        //     println!("{:?}", token);
-        // }
-        // println!("Eof");
+        let mut lexer = Lexer::new(input);
+        while let Some(token) = lexer.next_token() {
+            println!("{:?}", token);
+        }
+        println!("Eof");
 
-        let mut parser = Parser::new(input);
-        println!("{:?}", parser.parse());
+        // let mut parser = Parser::new(input);
+        // println!("{:?}", parser.parse());
     }
 }
