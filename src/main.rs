@@ -1,8 +1,5 @@
 // mod ast;
 mod lexer;
-mod lexer_book_style;
-mod lexer_peekable_bytes;
-mod lexer_peekable_chars;
 mod repl;
 mod token;
 
