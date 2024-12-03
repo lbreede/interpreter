@@ -41,7 +41,7 @@ impl Parser {
     }
 
     fn peek(&mut self) -> Token {
-        if let Some(token) = self.tokens.last() {
+        if let Some(_token) = self.tokens.last() {
             self.tokens.clone().last().unwrap().clone()
         } else {
             Token::Eof
@@ -87,6 +87,7 @@ impl Parser {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
     fn it_works() {
         let mut parser = Parser::new("let foo = 5;");
         let statements = parser.parse();
