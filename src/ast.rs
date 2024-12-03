@@ -4,6 +4,7 @@ use crate::token::Token;
 #[derive(Debug, PartialEq, Eq)]
 pub enum Expression {
     IntegerLiteral(i64),
+    IdentifierLiteral(String),
 }
 #[derive(Debug, PartialEq, Eq)]
 pub struct LetStatement {
@@ -77,6 +78,7 @@ impl Parser {
     fn parse_expression(&mut self) -> Expression {
         match self.next() {
             Token::Int(number) => Expression::IntegerLiteral(number.parse().unwrap()),
+            Token::Ident(ident) => Expression::IdentifierLiteral(ident),
             _ => panic!("bad token {:?}", self.next()),
         }
     }
