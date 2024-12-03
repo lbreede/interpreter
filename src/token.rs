@@ -29,8 +29,8 @@ pub enum Token {
 
     LParen,
     RParen,
-    LSquirly,
-    RSquirly,
+    LBrace,
+    RBrace,
 
     // Keywords
     Function,
@@ -40,6 +40,21 @@ pub enum Token {
     If,
     Else,
     Return,
+}
+
+impl From<String> for Token {
+    fn from(value: String) -> Self {
+        match value.as_str() {
+            "let" => Token::Let,
+            "fn" => Token::Function,
+            "true" => Token::True,
+            "false" => Token::False,
+            "if" => Token::If,
+            "else" => Token::Else,
+            "return" => Token::Return,
+            _ => Token::Ident(value),
+        }
+    }
 }
 
 #[derive(Debug)]
@@ -71,8 +86,8 @@ impl Token {
             '(' => Token::LParen,
             ')' => Token::RParen,
             ',' => Token::Comma,
-            '{' => Token::LSquirly,
-            '}' => Token::RSquirly,
+            '{' => Token::LBrace,
+            '}' => Token::RBrace,
             '+' => Token::Plus,
             '-' => Token::Minus,
             '*' => Token::Asterisk,
